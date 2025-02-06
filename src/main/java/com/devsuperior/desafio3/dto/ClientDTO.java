@@ -4,12 +4,17 @@ import java.time.LocalDate;
 
 import com.devsuperior.desafio3.entities.Client;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+
 public class ClientDTO {
 
 	private Long id;
+	@NotBlank(message = "Campo nome não pode ficar em branco, por favor preencha")
 	private String name;
 	private String cpf;
 	private Double income;
+	@PastOrPresent(message = "Campo data de nascimento não pode ser uma data futura")
 	private LocalDate birthDate;
 	private Integer children;
 

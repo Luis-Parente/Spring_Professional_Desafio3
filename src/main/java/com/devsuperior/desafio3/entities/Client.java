@@ -19,7 +19,7 @@ public class Client {
 	private String name;
 	private String cpf;
 	private Double income;
-	private LocalDate birthDate;
+	private LocalDate birthDate;	
 	private Integer children;
 
 	public Client() {
