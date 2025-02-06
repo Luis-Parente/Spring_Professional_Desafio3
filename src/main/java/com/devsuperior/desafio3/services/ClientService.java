@@ -19,9 +19,9 @@ public class ClientService {
 
 	@Transactional(readOnly = true)
 	public ClientDTO findById(Long id) {
-		Client entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
+		Client entity = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
 		return new ClientDTO(entity);
-
 	}
 
 	@Transactional(readOnly = true)
@@ -36,21 +36,27 @@ public class ClientService {
 		copyDataToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new ClientDTO(entity);
-
 	}
 
 	@Transactional
 	public ClientDTO update(Long id, ClientDTO dto) {
-		Client entity = repository.getReferenceById(id);
-		copyDataToEntity(dto, entity);
-		entity = repository.save(entity);
-		return new ClientDTO(entity);
-
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Recurso não encontrado");
+		} else {
+			Client entity = repository.getReferenceById(id);
+			copyDataToEntity(dto, entity);
+			entity = repository.save(entity);
+			return new ClientDTO(entity);
+		}
 	}
 
 	@Transactional
 	public void delete(Long id) {
-		repository.deleteById(id);
+		if (!repository.existsById(id)) {
+			throw new ResourceNotFoundException("Recurso não encontrado");
+		} else {
+			repository.deleteById(id);
+		}
 	}
 
 	public void copyDataToEntity(ClientDTO dto, Client entity) {
@@ -59,7 +65,5 @@ public class ClientService {
 		entity.setIncome(dto.getIncome());
 		entity.setBirthDate(dto.getBirthDate());
 		entity.setChildren(dto.getChildren());
-
 	}
-
 }
